@@ -91,8 +91,8 @@ def main():
 
         key = f"Content_ID{i}"
         content_timestamp_dict[key] = {
-            'start_time': time_to_seconds(joke_start),
-            'end_time': time_to_seconds(joke_end)
+            'start_time': joke_start,
+            'end_time': joke_end
         }
 
         # Find all transcript segments that fall within this joke's time range
@@ -154,7 +154,6 @@ def main():
 # which represent that contentID
 
 
-#ger
 
 if __name__ == "__main__":
     main()

@@ -153,7 +153,9 @@ NOT cut mid-sentence, mid-concept, or between list items
 In the middle of code or config explanations
 While Identifying start_time and end_time, refer to the Rules and Identifications declared above
 DO NOT cut in between delivery
- OUTPUT FORMAT:
+
+OUTPUT CAN HAVE INTERSECTIONS BUT NEVER ABOVE 1 minute
+OUTPUT FORMAT:
 {
   "chunks": [
     {

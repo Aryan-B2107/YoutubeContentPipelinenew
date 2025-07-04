@@ -36,15 +36,35 @@ def clippingFromVideo(input_file, input_vid, output_loc):
 
     os.makedirs(output_loc, exist_ok=True)
 
-    for content_id, times in data.items():
-        start = times['start_time']
-        end = times['end_time']
+    try:
 
+        for content_id, times in data.items():
+            start = normalize_time(times['start_time'])
+            end = normalize_time(times['end_time'])
+
+            output_file = os.path.join(output_loc, f"{content_id}.mp4")
+
+            #commands:
+            cmd = [
+                r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\ffmpeg.exe",
+                '-ss', start,
+                '-to', end,
+                '-i', input_vid,
+                '-c:v', 'libx264',
+                '-c:a', 'aac',
+                '-strict', 'experimental',
+                output_file
+            ]
+            print(f"Extracting {content_id} from ({start} to {end} -> {output_file})")
+            subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error extracting files")
 
 
 if __name__ == "__main__":
     file = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\src\transcribers\timestamped_collection.json"
     vid = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜ Gabriel Iglesias [ux8GZAtCN-M].mp4"
     output_location = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips"
+
 
     clippingFromVideo(file, vid, output_location)
