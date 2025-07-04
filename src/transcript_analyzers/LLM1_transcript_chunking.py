@@ -87,7 +87,7 @@ RULES:
 INPUT FORMAT: Array of {content, start_time, end_time}
 
 While Identifying start_time and end_time, refer to the Rules and Identifications declared above
-DO NOT cut in between delivery
+DO NOT cut in between delivery, DO NOT END ABRUPTLY
  OUTPUT FORMAT:
 {
   "chunks": [

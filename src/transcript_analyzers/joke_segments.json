@@ -22,33 +22,33 @@
     },
     {
       "start_time": "3:08",
-      "end_time": "3:41",
-      "duration": "0:33"
+      "end_time": "3:45",
+      "duration": "0:37"
     },
     {
-      "start_time": "3:41",
+      "start_time": "3:45",
       "end_time": "4:16",
-      "duration": "0:35"
+      "duration": "0:31"
     },
     {
       "start_time": "4:16",
-      "end_time": "4:50",
-      "duration": "0:34"
+      "end_time": "4:52",
+      "duration": "0:36"
     },
     {
-      "start_time": "4:50",
+      "start_time": "4:52",
       "end_time": "5:40",
-      "duration": "0:50"
+      "duration": "0:48"
     },
     {
       "start_time": "5:53",
-      "end_time": "6:54",
-      "duration": "1:01"
+      "end_time": "6:59",
+      "duration": "1:06"
     },
     {
-      "start_time": "6:54",
+      "start_time": "6:59",
       "end_time": "8:03",
-      "duration": "1:09"
+      "duration": "1:04"
     },
     {
       "start_time": "8:03",
@@ -71,9 +71,9 @@
       "duration": "0:45"
     },
     {
-      "start_time": "10:58",
+      "start_time": "11:02",
       "end_time": "11:52",
-      "duration": "0:54"
+      "duration": "0:50"
     },
     {
       "start_time": "11:52",
@@ -92,18 +92,18 @@
     },
     {
       "start_time": "15:02",
-      "end_time": "15:55",
-      "duration": "0:53"
+      "end_time": "15:50",
+      "duration": "0:48"
     },
     {
-      "start_time": "15:55",
-      "end_time": "16:08",
-      "duration": "0:13"
+      "start_time": "15:50",
+      "end_time": "16:14",
+      "duration": "0:24"
     },
     {
-      "start_time": "16:08",
+      "start_time": "16:14",
       "end_time": "17:29",
-      "duration": "1:21"
+      "duration": "1:15"
     },
     {
       "start_time": "17:29",
@@ -152,8 +152,8 @@
     },
     {
       "start_time": "25:08",
-      "end_time": "26:14",
-      "duration": "1:06"
+      "end_time": "26:29",
+      "duration": "1:21"
     }
   ]
 }

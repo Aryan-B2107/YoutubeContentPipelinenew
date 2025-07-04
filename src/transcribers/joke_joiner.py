@@ -47,10 +47,6 @@ def load_json_file(filepath):
         return None
 
 
-
-
-
-
 def main():
     # Define file paths
     base_dir = "src"
@@ -89,10 +85,12 @@ def main():
         joke_start = chunk['start_time']
         joke_end = chunk['end_time']
 
-        key = f"Content_ID{i}"
+        # The bottom 4 lines are causing the transcript mismatch
+
+        key = f"Content_ID{count + 1}"
         content_timestamp_dict[key] = {
             'start_time': joke_start,
-            'end_time': joke_end,
+            'end_time': joke_end
 
         }
 
@@ -102,7 +100,6 @@ def main():
         for segment in transcript_segments:
             segment_start = segment.get('start_time')
             segment_end = segment.get('end_time')
-
 
             # Skip segments with missing time data
             if segment_start is None or segment_end is None:
@@ -154,7 +151,6 @@ def main():
 # extract video clips from the YouTube video
 # into timestamped_collection.json, where I grab the timestamps, create this json, where we have content_ID and timestamps
 # which represent that contentID
-
 
 
 if __name__ == "__main__":
