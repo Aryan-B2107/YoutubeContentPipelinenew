@@ -148,7 +148,7 @@ def score_chunks(parameterized_json, api_key):
 
     with open('scored_chunks.json', 'w') as file:
         json.dump(scored_segments, file, indent=2)
-    print(scored_segments)
+
     return scored_segments
 
 if __name__ == "__main__":

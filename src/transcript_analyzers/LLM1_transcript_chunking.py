@@ -92,7 +92,6 @@ DO NOT cut in between delivery
 {
   "chunks": [
     {
-      "Title":"Lists in Python"
       "start_time": "1:23",
       "end_time": "1:45",
       "duration": "0:22",
@@ -162,7 +161,6 @@ OUTPUT FORMAT:
       "Title":"Lists in Python"
       "start_time": "1:23",
       "end_time": "1:45",
-      "duration": "0:22",
     }
   ]
 }

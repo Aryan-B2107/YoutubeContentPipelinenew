@@ -20,7 +20,7 @@ def run_ytdlp(url, ytdlp_path="yt-dlp.exe"):
     """
     try:
         print(f"Downloading: {url}")
-        result = subprocess.run([ytdlp_path, url],
+        result = subprocess.run([ytdlp_path, '-f', "bestvideo[height<=1080]+bestaudio/best[height<=1080]", url],
 
                                 cwd=r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos",
                                 text=True,

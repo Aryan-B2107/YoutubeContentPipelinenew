@@ -92,7 +92,8 @@ def main():
         key = f"Content_ID{i}"
         content_timestamp_dict[key] = {
             'start_time': joke_start,
-            'end_time': joke_end
+            'end_time': joke_end,
+
         }
 
         # Find all transcript segments that fall within this joke's time range
@@ -101,6 +102,7 @@ def main():
         for segment in transcript_segments:
             segment_start = segment.get('start_time')
             segment_end = segment.get('end_time')
+
 
             # Skip segments with missing time data
             if segment_start is None or segment_end is None:
