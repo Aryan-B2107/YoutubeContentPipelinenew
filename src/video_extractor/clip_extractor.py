@@ -8,6 +8,18 @@ and outputs final clips inside:
 D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips
 """
 
+r"""
+MANUALLY MERGE AUDIO AND VIDEO:
+"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\ffmpeg.exe" 
+-i 
+"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜
+Gabriel Iglesias [ux8GZAtCN-M].f616.mp4" -i
+"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜
+Gabriel Iglesias [ux8GZAtCN-M].f251.webm" -c:v copy -c:a aac -strict experimental 
+"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\fluffy_output.mp4"
+
+"""
+
 import json
 import os
 import subprocess
@@ -69,8 +81,8 @@ def clippingFromVideo(input_file, input_vid, output_loc):
 
 
 if __name__ == "__main__":
-    file = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\src\transcribers\timestamped_collection.json"
-    vid = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\output.mp4"
+    file = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\timestamped_collection.json"
+    vid = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜ Gabriel Iglesias [ux8GZAtCN-M].mp4"
     output_location = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips"
 
 

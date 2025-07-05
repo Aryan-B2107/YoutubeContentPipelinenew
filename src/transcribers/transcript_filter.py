@@ -1,6 +1,10 @@
 #This Filter Converts  raw transcript Data to JSON FORMAT
 
 import re
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 """#Our regex pattern: (\d{1,2}:\d{2})
 
@@ -13,8 +17,9 @@ Exactly the specified number of occurrences
 
 """
 
+os.getenv("RAW_TRANSCRIPT_PATH")
 
-def convert_script_to_json(raw_transcript):
+def convert_rawtranscript_to_json(raw_transcript):
     # Split transcript into lines:
     lines = raw_transcript.splitlines()
 
@@ -61,15 +66,15 @@ def convert_script_to_json(raw_transcript):
 
 if __name__ == "__main__":
     try:
-        with open("raw_transcript.txt", "r", encoding="utf-8", ) as file:
+        with open("../../data/transcripts/raw_transcript.txt", "r", encoding="utf-8", ) as file:
             sample_raw_transcript = file.read()
     except FileNotFoundError:
         print("raw_transcript.txt not found.")
 
-    json_output = convert_script_to_json(sample_raw_transcript)
+    json_output = convert_rawtranscript_to_json(sample_raw_transcript)
 
     import json
-    with open("Converted_json_transcript.json", 'w', encoding='utf-8') as f:
+    with open("../../data/transcripts/Converted_json_transcript.json", 'w', encoding='utf-8') as f:
         json.dump(json_output, f, indent=4, ensure_ascii=False)
 
     print(json.dumps(json_output, indent=4))

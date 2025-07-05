@@ -1,43 +1,58 @@
 import json
+import os
+
 
 def main():
+    timestamped_path = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\timestamped_collection.json"
     # Load scored_chunks.json
-    with open("scored_chunks.json", "r") as f:
+    with open(r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\scored_chunks.json", "r") as f:
         scored_data = json.load(f)
 
-    # Extract content_ID keys from each joke and capitalize 'c' to 'C'
-    content_order = []
-    for joke in scored_data["jokes"]:
-        content_id_key = None
+    jokes = scored_data["jokes"]
+
+    # Step 1: Compute average scores
+    for joke in jokes:
+        humour = joke.get("humour_score", 0.0)
+        shock = joke.get("shock_value", 0.0)
+        # You can include explicit content in average if needed
+        average_score = (humour + shock) / 2
+        joke["average_score"] = average_score
+
+    # Step 2: Sort jokes by average score (highest to lowest)
+    jokes_sorted = sorted(jokes, key=lambda j: j["average_score"], reverse=True)
+
+    # Step 3: Extract content_ID keys in order
+    sorted_content_ids = []
+    for joke in jokes_sorted:
         for key in joke.keys():
             if key.lower().startswith("content_id"):
-                content_id_key = key
+                # Capitalize 'C' in case the key starts with lowercase
+                corrected_key = key[0].upper() + key[1:]
+                sorted_content_ids.append(corrected_key)
                 break
-        if content_id_key:
-            # Capitalize the first letter only to match timestamped keys
-            corrected_key = content_id_key[0].upper() + content_id_key[1:]
-            content_order.append(corrected_key)
         else:
             print("Warning: No content_ID key found in a joke.")
 
-    # Load timestamped_collection.json (adjust your path here)
-    timestamped_path = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\src\transcribers\timestamped_collection.json"
+    # Step 4: Load timestamped_collection.json
+
     with open(timestamped_path, "r") as f:
         timestamped_data = json.load(f)
 
-    # Reorder timestamped_collection.json according to content_order
+    # Step 5: Reorder timestamped data
     reordered_timestamped = {}
-    for cid in content_order:
+    for cid in sorted_content_ids:
         if cid in timestamped_data:
             reordered_timestamped[cid] = timestamped_data[cid]
         else:
             print(f"Warning: {cid} not found in timestamped_collection.json")
 
-    # Save reordered timestamped_collection.json back to the file
-    with open(timestamped_path, "w") as f:
-        json.dump(reordered_timestamped, f, indent=2)
+    # Step 6: Save reordered timestamped_collection.json
+    print("✅ Reordering complete based on average scores.")
+    """with open(timestamped_path, "w") as f:
+        json.dump(reordered_timestamped, f, indent=2)"""
+    return reordered_timestamped
 
-    print("Reordering complete!")
+
 
 if __name__ == "__main__":
     main()

@@ -27,24 +27,19 @@ def parse_and_parameterize(input_file, output_file):
     And parses the json file to add more parameters based on which segment will be scored by API call
     :return:
     """
-    try:
-        with open(input_file, 'r') as file:
-            data = json.load(file)
-            print(f"Successfully loaded data form the '{input_file}'.")
-            for i in range(len(data['jokes']) - 12): # minus 8 is just for rapid testing on a realistic range
-                data['jokes'][i]['humour_score'] = 0.0
-                data['jokes'][i]['shock_value'] = 0.0
-                #data['jokes'][i]['explicit_content_score'] = 0.0
-            print(data)
-            with open("parameterized_chunks.json", 'w') as file:
-                json.dump(data, file, indent=2)
 
-    except FileNotFoundError:
-        print(f"Error: The file '{input_file}' was not loaded.")
-        return
-    except json.JSONDecodeError:
-        print(f"Error: The file '{input_file}' is not a valid json file")
-        return
+    with open(r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\joined_jokes.json", 'r', encoding='utf-8', errors='ignore') as file:
+        data = json.load(file)
+        print(f"Successfully loaded data form the '{input_file}'.")
+        for i in range(len(data['jokes']) - 12): # minus 8 is just for rapid testing on a realistic range
+            data['jokes'][i]['humour_score'] = 0.0
+            data['jokes'][i]['shock_value'] = 0.0
+            #data['jokes'][i]['explicit_content_score'] = 0.0
+        print(data)
+
+        with open(os.getenv("PARAMETER_CHUNK_PATH"), 'w') as file:
+            json.dump(data, file, indent=2)
+
 
 
 SYSTEM_PROMPT = """ You are a joke analysis expert. 
@@ -118,7 +113,7 @@ def score_chunks(parameterized_json, api_key):
     client = genai.Client(api_key=api_key)
 
     # Load Transcript
-    with open(parameterized_json, 'r', encoding='utf-8') as f:
+    with open(parameterized_json, 'r', encoding='utf-8', errors='ignore') as f:
         parameterized_data = json.load(f)
 
     #fetch prompt
@@ -145,18 +140,8 @@ def score_chunks(parameterized_json, api_key):
     scored_segments = json.loads(response.text)
 
 
-
-    with open('scored_chunks.json', 'w') as file:
-        json.dump(scored_segments, file, indent=2)
-
     return scored_segments
 
+
 if __name__ == "__main__":
-    input_json = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\src\transcribers\joined_jokes.json"
-    output_json = "parameterized_chunks.json"
-    parse_and_parameterize(input_json, output_json)
-    try:
-        score_chunks('parameterized_chunks.json', api_key)
-        print("successfully fetched output from gemini api and stored in scored_chunks.json")
-    except Exception:
-        print("Token Limit reached, output not completed")
+    parse_and_parameterize(os.getenv("JOIN_JOKES"), os.getenv("PARAMETER_CHUNK_PATH"))

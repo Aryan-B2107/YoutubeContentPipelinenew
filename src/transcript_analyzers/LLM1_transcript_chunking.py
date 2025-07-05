@@ -223,12 +223,8 @@ def chunk_jokes(transcript_json_file, api_key):
         config=generation_config
     )
 
-    #Save into new file, return
 
     segments = json.loads(response.text)
-    with open('joke_segments.json', 'w') as f:
-        json.dump(segments, f, indent=2)
-    print(segments)
     return segments
 
 if __name__ == "__main__":

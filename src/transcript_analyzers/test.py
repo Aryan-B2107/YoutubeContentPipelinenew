@@ -15,5 +15,5 @@ if __name__ == "__main__":
         data['jokes'][i]['buildup_score'] = 0.0
         data['jokes'][i]['virality_score'] = 0.0
     print(data)
-    with open("scored_chunks.json", 'w') as file:
+    with open("../../data/transcripts/scored_chunks.json", 'w') as file:
         json.dump(data, file, indent=2)
