@@ -1,11 +1,19 @@
 import json
 import os
+from dotenv import load_dotenv
 
 
 def main():
-    timestamped_path = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\timestamped_collection.json"
+    # Load environment variables
+    load_dotenv()
+
+    # Get paths from environment variables
+    base_path = os.getenv("BASE_PATH")
+    timestamped_path = os.getenv("TIMESTAMPED_PATH").replace("%BASE_PATH%", base_path)
+    scored_segments_path = os.getenv("SCORED_SEG_PATH").replace("%BASE_PATH%", base_path)
+
     # Load scored_chunks.json
-    with open(r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\scored_chunks.json", "r") as f:
+    with open(scored_segments_path, "r") as f:
         scored_data = json.load(f)
 
     jokes = scored_data["jokes"]
@@ -34,7 +42,6 @@ def main():
             print("Warning: No content_ID key found in a joke.")
 
     # Step 4: Load timestamped_collection.json
-
     with open(timestamped_path, "r") as f:
         timestamped_data = json.load(f)
 
@@ -48,10 +55,7 @@ def main():
 
     # Step 6: Save reordered timestamped_collection.json
     print("✅ Reordering complete based on average scores.")
-    """with open(timestamped_path, "w") as f:
-        json.dump(reordered_timestamped, f, indent=2)"""
     return reordered_timestamped
-
 
 
 if __name__ == "__main__":

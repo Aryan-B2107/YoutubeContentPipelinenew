@@ -1,28 +1,8 @@
-r"""
-This extractor uses reference of; D:\YoutubeContentPipeline\YoutubeContentPipelineMain\src\transcribers\timestamped_collection.json
-
- to extract clips from downloaded video inside:
- D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜ Gabriel Iglesias [ux8GZAtCN-M].mp4
-
-and outputs final clips inside:
-D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips
-"""
-
-r"""
-MANUALLY MERGE AUDIO AND VIDEO:
-"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\ffmpeg.exe" 
--i 
-"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜
-Gabriel Iglesias [ux8GZAtCN-M].f616.mp4" -i
-"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜
-Gabriel Iglesias [ux8GZAtCN-M].f251.webm" -c:v copy -c:a aac -strict experimental 
-"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\fluffy_output.mp4"
-
-"""
 
 import json
 import os
 import subprocess
+from dotenv import load_dotenv
 
 def normalize_time(t):
     """Convert M:SS or MM:SS to HH:MM:SS format."""
@@ -39,12 +19,13 @@ def normalize_time(t):
     return total_time
 
 
-def clippingFromVideo(input_file, input_vid, output_loc):
+def clippingFromVideo(input_file, input_vid, output_loc, ffmpeg_path):
     try:
         with open(input_file, 'r') as f:
             data = json.load(f)
     except Exception as e:
         print(f"Error Loading file:{input_file}")
+        return
 
     os.makedirs(output_loc, exist_ok=True)
 
@@ -62,9 +43,8 @@ def clippingFromVideo(input_file, input_vid, output_loc):
 
             output_file = os.path.join(output_loc, f"{char}_ID{counter}.mp4")
 
-            #commands:
             cmd = [
-                r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\ffmpeg.exe",
+                ffmpeg_path,
                 '-ss', start,
                 '-to', end,
                 '-i', input_vid,
@@ -77,13 +57,26 @@ def clippingFromVideo(input_file, input_vid, output_loc):
             subprocess.run(cmd, check=True)
 
     except subprocess.CalledProcessError as e:
-        print(f"Error extracting files")
+        print(f"Error extracting files: {e}")
 
 
 if __name__ == "__main__":
-    file = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\timestamped_collection.json"
-    vid = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\Fluffy Goes To India ｜ Gabriel Iglesias [ux8GZAtCN-M].mp4"
-    output_location = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips"
+    # Load environment variables
+    load_dotenv()
 
+    # Get base path and expand it in other paths
+    base_path = os.getenv("BASE_PATH")
 
-    clippingFromVideo(file, vid, output_location)
+    # Get timestamped path from env and expand BASE_PATH
+    timestamped_path = os.getenv("TIMESTAMPED_PATH").replace("%BASE_PATH%", base_path)
+
+    # Configure other paths relative to BASE_PATH
+    videos_dir = os.path.join(base_path, "data", "videos")
+    input_vid = os.path.join(videos_dir, "fluffy_output.mp4")
+    output_location = os.path.join(videos_dir, "final_segmented_clips")
+    ffmpeg_path = os.path.join(base_path, "ffmpeg.exe")
+
+    # Create videos directory if it doesn't exist
+    os.makedirs(videos_dir, exist_ok=True)
+
+    clippingFromVideo(timestamped_path, input_vid, output_location, ffmpeg_path)

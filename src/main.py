@@ -14,14 +14,58 @@ from dotenv import load_dotenv
 #This is an entry point class
 load_dotenv()
 
+
+# Add this right after load_dotenv()
+base_path = os.getenv("BASE_PATH")
+
+# Function to expand BASE_PATH in environment variables
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
 api_key = os.getenv("API_KEY")
-raw_trnscrpt = os.getenv("RAW_TRANSCRIPT_PATH")
-convert_json = os.getenv("CONVERT_TRANSCRIPT_JSON")
-joined_jokes = os.getenv("JOIN_JOKES")
-joke_seg = os.getenv("JOKE_SEGMENTS")
-timestamped = os.getenv("TIMESTAMPED_PATH")
-parameter_chunk_path = os.getenv("PARAMETER_CHUNK_PATH")
-scored_segment_path = os.getenv("SCORED_SEG_PATH")
+raw_trnscrpt = expand_base_path(os.getenv("RAW_TRANSCRIPT_PATH"))
+convert_json = expand_base_path(os.getenv("CONVERT_TRANSCRIPT_JSON"))
+joined_jokes = expand_base_path(os.getenv("JOIN_JOKES"))
+joke_seg = expand_base_path(os.getenv("JOKE_SEGMENTS"))
+timestamped = expand_base_path(os.getenv("TIMESTAMPED_PATH"))  # Fixed variable name
+parameter_chunk_path = expand_base_path(os.getenv("PARAMETER_CHUNK_PATH"))
+scored_segment_path = expand_base_path(os.getenv("SCORED_SEG_PATH"))
+# Create required directories before any file operations
+required_dirs = [
+    os.path.dirname(p) for p in [
+        raw_trnscrpt,
+        convert_json,
+        joined_jokes,
+        joke_seg,
+        timestamped,
+        parameter_chunk_path,
+        scored_segment_path
+    ] if p is not None
+]
+
+# Add video-related directories
+required_dirs.extend([
+    os.path.join(base_path, "data", "transcripts"),
+    os.path.join(base_path, "data", "videos"),
+    os.path.join(base_path, "data", "videos", "final_segmented_clips")
+])
+
+# Create all required directories
+for directory in required_dirs:
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
+# Update video processing paths to use base_path
+input_file = os.path.join(base_path, "data", "transcripts", "timestamped_collection.json")
+input_vid = os.path.join(base_path, "data", "videos", "fluffy_output.mp4")
+output_loc = os.path.join(base_path, "data", "videos", "final_segmented_clips")
+ffmpeg_path = os.path.join(base_path,"data", "videos", "ffmpeg.exe")
+
+
+
 
 stop_spinner = False  # module-level flag to control spinner thread
 
@@ -83,7 +127,7 @@ if __name__ == "__main__":
 
     # 2) LLM1 Pass which chunks the jokes as per appropriate guidelines
 
-    if sample_raw_transcript:
+    """if sample_raw_transcript:
         # Start spinner in separate thread
         stop_spinner = False
         spinner_thread = threading.Thread(target=spinner, args=("Chunking transcript",))
@@ -102,11 +146,11 @@ if __name__ == "__main__":
 
         # Stop spinner and wait for thread to finish
         stop_spinner = True
-        spinner_thread.join()
+        spinner_thread.join()"""
 
     # 3) Join jokes as per LLM1 generated timestamps
 
-    try:
+    """try:
         joke_joiner.run_pipeline(
             transcript_path=convert_json,
             jokes_path=joke_seg,
@@ -126,7 +170,7 @@ if __name__ == "__main__":
         with open(scored_segment_path, 'w', encoding='utf-8', errors='ignore') as file:
             json.dump(scored_segments, file, indent=2)
     except google.genai.errors.ClientError as e:  # Log the error but continue execution
-        print(f"Google GenAI Client Error: {str(e)}. Continuing with the next steps...")
+        print(f"Google GenAI Client Error: {str(e)}. Continuing with the next steps...")"""
 
 
 
@@ -152,10 +196,8 @@ if __name__ == "__main__":
         return total_time
 
 
-    input_file = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\timestamped_collection.json"
-    input_vid = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\fluffy_output.mp4"
-    output_loc = r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\videos\final_segmented_clips"
 
+    #
     try:
         with open(input_file, 'r') as f:
             data = json.load(f)
@@ -180,7 +222,7 @@ if __name__ == "__main__":
 
             #commands:
             cmd = [
-                r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\ffmpeg.exe",
+                ffmpeg_path,
                 '-ss', start,
                 '-to', end,
                 '-i', input_vid,

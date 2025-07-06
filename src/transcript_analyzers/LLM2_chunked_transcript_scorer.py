@@ -17,18 +17,18 @@ from google.genai import types
 import os
 from dotenv import load_dotenv
 
+#from src.main import joined_jokes,parameter_chunk_path
+
 load_dotenv()
 api_key = os.getenv("API_KEY")
-
 
 def parse_and_parameterize(input_file, output_file):
     """
     This function takes in the input json file from joined jokes.json, which is a collection of the segments collected
     And parses the json file to add more parameters based on which segment will be scored by API call
-    :return:
     """
 
-    with open(r"D:\YoutubeContentPipeline\YoutubeContentPipelineMain\data\transcripts\joined_jokes.json", 'r', encoding='utf-8', errors='ignore') as file:
+    with open(input_file, 'r', encoding='utf-8', errors='ignore') as file:  # Changed joined_jokes to input_file
         data = json.load(file)
         print(f"Successfully loaded data form the '{input_file}'.")
         for i in range(len(data['jokes']) - 12): # minus 8 is just for rapid testing on a realistic range
@@ -37,8 +37,9 @@ def parse_and_parameterize(input_file, output_file):
             #data['jokes'][i]['explicit_content_score'] = 0.0
         print(data)
 
-        with open(os.getenv("PARAMETER_CHUNK_PATH"), 'w') as file:
+        with open(output_file, 'w') as file:  # Changed parameter_chunk_path to output_file
             json.dump(data, file, indent=2)
+
 
 
 
