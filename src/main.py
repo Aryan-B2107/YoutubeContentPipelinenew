@@ -11,6 +11,7 @@ from transcribers import transcript_filter, joke_joiner
 from transcript_analyzers import LLM1_transcript_chunking, LLM2_chunked_transcript_scorer, transcript_sorter
 from dotenv import load_dotenv
 
+#This is an entry point class
 load_dotenv()
 
 api_key = os.getenv("API_KEY")
