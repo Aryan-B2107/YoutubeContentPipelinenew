@@ -217,8 +217,6 @@ Python Errors (UnboundLocalError, etc.): Ensure your Python code is exactly as p
 
 API Key Errors: Check your .env file for correct key format and ensure your GEMINI_API_KEY (and any other API keys) are valid and have the necessary permissions.
 
-📄 License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-📧 Contact
-For any questions or feedback, please reach out to [Your Name/Email].
