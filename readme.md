@@ -1,9 +1,9 @@
 ## YoutubeContentPipelinenew Documentation
 
-🚀 Project Overview
+ Project Overview
 This project is designed to automate parts of a YouTube content creation pipeline. Its primary function is to take a main audio track (e.g., a podcast or commentary) and intelligently overlay meme sound effects at specific timestamps, as defined by a transcript with assigned meme sounds. This helps streamline the post-production process for creating engaging and dynamic audio content.
 
-⚙️ Setting Up Your Environment (A Step-by-Step Guide)
+ Setting Up Your Environment (A Step-by-Step Guide)
 To ensure this project runs smoothly on your machine, please follow these steps carefully. This guide covers all necessary prerequisites and configurations.
 
 Prerequisites
@@ -135,8 +135,6 @@ UnboundLocalError (or other Python errors): Ensure your Python code is exactly a
 
 API Key Errors: Check your .env file for correct key format and ensure your GEMINI_API_KEY is valid.
 
-📄 License
+ License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-📧 Contact
-For any questions or feedback, please reach out to [Your Name/Email].
