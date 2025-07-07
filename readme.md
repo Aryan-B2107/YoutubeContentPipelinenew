@@ -1,7 +1,7 @@
 ## YoutubeContentPipelinenew Documentation
 
  Project Overview
-This project is designed to automate parts of a YouTube content creation pipeline. Its primary function is to take a main audio track (e.g., a podcast or commentary) and intelligently overlay meme sound effects at specific timestamps, as defined by a transcript with assigned meme sounds. This helps streamline the post-production process for creating engaging and dynamic audio content.
+This project is designed to automate parts of a YouTube content creation pipeline. Its primary function is to get long form youtube content, intelligently chunk transcripts, use those chunks as transcripts for short form content. These chunks are again passed through sentiment analysis to score the chunks based on various metrics like shock value, explicit contet, humour score, buildup score, to serially order the extracted videos, easing the content creation process
 
  Setting Up Your Environment (A Step-by-Step Guide)
 To ensure this project runs smoothly on your machine, please follow these steps carefully. This guide covers all necessary prerequisites and configurations.
