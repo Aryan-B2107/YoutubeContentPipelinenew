@@ -38,7 +38,7 @@ Input: A long-form YouTube video URL or local video file is provided.
 
 Transcription: The audio from the long-form content is transcribed into a detailed, timestamped text format.
 
-Chunking: The raw transcript is passed through an intelligent chunking module (likely leveraging LLMs) to identify and extract distinct, self-contained segments suitable for short-form videos.
+Chunking: The raw transcript is passed through an intelligent chunking module (leveraging LLMs) to identify and extract distinct, self-contained segments suitable for short-form videos.
 
 Analysis & Scoring: Each identified chunk is analyzed using sentiment and content scoring models to assign metrics like humor, shock, buildup, and explicit content scores.
 
