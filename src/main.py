@@ -67,7 +67,7 @@ ffmpeg_path = os.path.join(base_path,"data", "videos", "ffmpeg.exe")
 
 
 
-stop_spinner = False  # module-level flag to control spinner thread
+
 
 
 def save_json(data, path):
@@ -80,7 +80,7 @@ import itertools
 import sys
 import time
 
-progress = 0
+
 
 import sys
 import time
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     # 2) LLM1 Pass which chunks the jokes as per appropriate guidelines
 
-    """if sample_raw_transcript:
+    if sample_raw_transcript:
         # Start spinner in separate thread
         stop_spinner = False
         spinner_thread = threading.Thread(target=spinner, args=("Chunking transcript",))
@@ -146,11 +146,11 @@ if __name__ == "__main__":
 
         # Stop spinner and wait for thread to finish
         stop_spinner = True
-        spinner_thread.join()"""
+        spinner_thread.join()
 
     # 3) Join jokes as per LLM1 generated timestamps
 
-    """try:
+    try:
         joke_joiner.run_pipeline(
             transcript_path=convert_json,
             jokes_path=joke_seg,
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         with open(scored_segment_path, 'w', encoding='utf-8', errors='ignore') as file:
             json.dump(scored_segments, file, indent=2)
     except google.genai.errors.ClientError as e:  # Log the error but continue execution
-        print(f"Google GenAI Client Error: {str(e)}. Continuing with the next steps...")"""
+        print(f"Google GenAI Client Error: {str(e)}. Continuing with the next steps...")
 
 
 

@@ -112,3 +112,6 @@ def run_pipeline(
 
     save_json_file({"jokes": joined_jokes}, output_jokes_path)
     save_json_file(timestamps, output_timestamps_path)
+
+if __name__ == "__main__":
+    transcript_path = os.path.join(os.getcwd(), "data", "transcripts", "Converted_json_transcript.json")
