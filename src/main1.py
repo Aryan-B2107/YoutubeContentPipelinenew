@@ -128,13 +128,21 @@ if __name__ == "__main__":
 
     try:
         print(f"Processing {os.path.basename(joke_seg)} and storing in {os.path.basename(joined_jokes)}...")
+        """
+        def run_pipeline(
+    transcript_path,
+    jokes_path,
+    output_jokes_path,
+    output_timestamps_path
+):
+        """
 
-        joke_segments = LLM1_transcript_chunking.chunk_jokes(convert_json, api_key)
-        print(joke_segments)
         print("Transcript chunked successfully")
         print(f"Writing joined segments in {os.path.basename(joined_jokes)}")
 
-        with open(joke_seg, 'w') as f:
+
+
+        with open(joined_jokes, 'w') as f:
             json.dump(joke_segments, f, indent=4, ensure_ascii=False)
     except Exception as e:
         print(f"Error occurred while extracting joined chunks: {e}")
