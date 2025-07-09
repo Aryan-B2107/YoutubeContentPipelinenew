@@ -2,18 +2,28 @@ import json
 import os
 from dotenv import load_dotenv
 
+#This is an entry point class
+load_dotenv()
 
+base_path = os.getenv("BASE_PATH")
+
+# Function to expand BASE_PATH in environment variables
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
+
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
+timestamped = expand_base_path(os.getenv("TIMESTAMPED_PATH"))  # Fixed variable name
+parameter_chunk_path = expand_base_path(os.getenv("PARAMETER_CHUNK_PATH"))
+scored_segment_path = expand_base_path(os.getenv("SCORED_SEG_PATH"))
 def main():
     # Load environment variables
-    load_dotenv()
 
-    # Get paths from environment variables
-    base_path = os.getenv("BASE_PATH")
-    timestamped_path = os.getenv("TIMESTAMPED_PATH").replace("%BASE_PATH%", base_path)
-    scored_segments_path = os.getenv("SCORED_SEG_PATH").replace("%BASE_PATH%", base_path)
 
     # Load scored_chunks.json
-    with open(scored_segments_path, "r") as f:
+    with open(scored_segment_path, "r") as f:
         scored_data = json.load(f)
 
     jokes = scored_data["jokes"]
@@ -42,7 +52,7 @@ def main():
             print("Warning: No content_ID key found in a joke.")
 
     # Step 4: Load timestamped_collection.json
-    with open(timestamped_path, "r") as f:
+    with open(timestamped, "r") as f:
         timestamped_data = json.load(f)
 
     # Step 5: Reorder timestamped data

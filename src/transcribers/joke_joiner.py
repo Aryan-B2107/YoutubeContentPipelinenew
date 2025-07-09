@@ -1,6 +1,29 @@
 import json
 import os
 
+from dotenv import load_dotenv
+
+#This is an entry point class
+load_dotenv()
+
+base_path = os.getenv("BASE_PATH")
+
+# Function to expand BASE_PATH in environment variables
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
+
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
+api_key = os.getenv("API_KEY")
+raw_trnscrpt = expand_base_path(os.getenv("RAW_TRANSCRIPT_PATH"))
+convert_json = expand_base_path(os.getenv("CONVERT_TRANSCRIPT_JSON"))
+joined_jokes = expand_base_path(os.getenv("JOIN_JOKES"))
+joke_seg = expand_base_path(os.getenv("JOKE_SEGMENTS"))
+timestamped = expand_base_path(os.getenv("TIMESTAMPED_PATH"))  # Fixed variable name
+parameter_chunk_path = expand_base_path(os.getenv("PARAMETER_CHUNK_PATH"))
+scored_segment_path = expand_base_path(os.getenv("SCORED_SEG_PATH"))
 
 def time_to_seconds(time_str):
     if time_str is None or not isinstance(time_str, str):
@@ -24,27 +47,6 @@ def is_time_in_range(segment_start, segment_end, joke_start, joke_end):
     joke_end_sec = time_to_seconds(joke_end)
 
     return not (seg_end_sec <= joke_start_sec or seg_start_sec >= joke_end_sec)
-
-
-def load_json_file(filepath):
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f"Error: File {filepath} not found")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"Error: Invalid JSON in {filepath}: {e}")
-        return None
-
-
-def save_json_file(data, filepath):
-    try:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"Successfully saved file: {filepath}")
-    except Exception as e:
-        print(f"Error saving file {filepath}: {e}")
 
 
 def process_jokes(transcript_segments, joke_chunks):
@@ -86,32 +88,30 @@ def process_jokes(transcript_segments, joke_chunks):
     return joined_jokes, content_timestamp_dict
 
 
-def run_pipeline(
-    transcript_path,
-    jokes_path,
-    output_jokes_path,
-    output_timestamps_path
-):
-    print("Loading transcript data...")
-    transcript_data = load_json_file(transcript_path)
-    if not transcript_data:
-        return
-
-    print("Loading jokes data...")
-    jokes_data = load_json_file(jokes_path)
-    if not jokes_data:
-        return
-
-    transcript_segments = transcript_data if isinstance(transcript_data, list) else transcript_data.get('segments', [])
-    joke_chunks = jokes_data.get('chunks', [])
-
-    print(f"Found {len(transcript_segments)} transcript segments")
-    print(f"Found {len(joke_chunks)} joke chunks")
-
-    joined_jokes, timestamps = process_jokes(transcript_segments, joke_chunks)
-
-    save_json_file({"jokes": joined_jokes}, output_jokes_path)
-    save_json_file(timestamps, output_timestamps_path)
-
 if __name__ == "__main__":
-    transcript_path = os.path.join(os.getcwd(), "data", "transcripts", "Converted_json_transcript.json")
+    INPUT_FILE1 = convert_json
+    INPUT_FILE2 = joke_seg
+    print(convert_json)
+    print(INPUT_FILE2)
+    # Read and parse JSON files
+    try:
+        with open(INPUT_FILE1, 'r', encoding='utf-8') as f:
+            transcript_segments = json.load(f)
+
+        with open(INPUT_FILE2, 'r', encoding='utf-8') as f:
+            joke_data = json.load(f)
+            joke_chunks = joke_data['chunks']  # Extract the chunks array
+
+        # Call function once and unpack results
+        joined, content_timestamp_dict = process_jokes(transcript_segments, joke_chunks)
+
+
+        print(joined)
+        print(content_timestamp_dict)
+
+    except FileNotFoundError as e:
+        print(f"Error: Could not find file - {e}")
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON format - {e}")
+    except Exception as e:
+        print(f"Error: {e}")

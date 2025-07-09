@@ -3,6 +3,30 @@ import json
 import os
 import subprocess
 from dotenv import load_dotenv
+from dotenv import load_dotenv
+
+#This is an entry point class
+load_dotenv()
+
+base_path = os.getenv("BASE_PATH")
+
+# Function to expand BASE_PATH in environment variables
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
+
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
+api_key = os.getenv("API_KEY")
+raw_trnscrpt = expand_base_path(os.getenv("RAW_TRANSCRIPT_PATH"))
+convert_json = expand_base_path(os.getenv("CONVERT_TRANSCRIPT_JSON"))
+joined_jokes = expand_base_path(os.getenv("JOIN_JOKES"))
+joke_seg = expand_base_path(os.getenv("JOKE_SEGMENTS"))
+timestamped = expand_base_path(os.getenv("TIMESTAMPED_PATH"))  # Fixed variable name
+parameter_chunk_path = expand_base_path(os.getenv("PARAMETER_CHUNK_PATH"))
+scored_segment_path = expand_base_path(os.getenv("SCORED_SEG_PATH"))
+videos_dir = expand_base_path(os.getenv("VIDEOS_DIR"))
 
 def normalize_time(t):
     """Convert M:SS or MM:SS to HH:MM:SS format."""
@@ -67,16 +91,15 @@ if __name__ == "__main__":
     # Get base path and expand it in other paths
     base_path = os.getenv("BASE_PATH")
 
-    # Get timestamped path from env and expand BASE_PATH
-    timestamped_path = os.getenv("TIMESTAMPED_PATH").replace("%BASE_PATH%", base_path)
-
     # Configure other paths relative to BASE_PATH
-    videos_dir = os.path.join(base_path, "data", "videos")
+    print(videos_dir +  "final_segmented_clips")
     input_vid = os.path.join(videos_dir, "fluffy_output.mp4")
-    output_location = os.path.join(videos_dir, "final_segmented_clips")
-    ffmpeg_path = os.path.join(base_path, "ffmpeg.exe")
+    output_location = videos_dir +  "final_segmented_clips"
+    ffmpeg_path = videos_dir + "ffmpeg.exe"
+
+
 
     # Create videos directory if it doesn't exist
     os.makedirs(videos_dir, exist_ok=True)
 
-    clippingFromVideo(timestamped_path, input_vid, output_location, ffmpeg_path)
+    clippingFromVideo(timestamped, input_vid, output_location, ffmpeg_path)
