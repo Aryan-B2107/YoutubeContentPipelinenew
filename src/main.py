@@ -85,7 +85,6 @@ def simple_spinner():
 
 
 if __name__ == "__main__":
-
     # 1) Raw Transcript is passed through transcript filter to get JSON representation
     try:
         with open(raw_trnscrpt, "r", encoding="utf-8") as file:
@@ -158,8 +157,11 @@ if __name__ == "__main__":
 
     # LLM2 Pass which parses and parameterizes the data, preparing it for scoring, and finlly makes call to the service
 
-    LLM2_chunked_transcript_scorer.parse_and_parameterize(joined_jokes, parameter_chunk_path)
+    #LLM2_chunked_transcript_scorer.parse_and_parameterize(joined_jokes, parameter_chunk_path)
+    print(f"Processing {parameter_chunk_path}...")
     scored_segs = LLM2_chunked_transcript_scorer.score_chunks(parameter_chunk_path, api_key)
+
+
 
     #Runing the Transcript_sorter, sorting clips as per score
 
@@ -169,8 +171,6 @@ if __name__ == "__main__":
         json.dump(reordered_timestamped, f, indent=2, ensure_ascii=False )
 
     #Extracting clips from long video, using the order tht transcript sorter actually made
-
-    base_path = os.getenv("BASE_PATH")
 
     # Configure other paths relative to BASE_PATH
     print(videos_dir + "final_segmented_clips")

@@ -1,3 +1,5 @@
+
+
 """
 This pass will:
 
@@ -16,11 +18,39 @@ from google import genai
 from google.genai import types
 import os
 from dotenv import load_dotenv
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
 
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
+api_key = os.getenv("API_KEY")
+raw_trnscrpt = expand_base_path(os.getenv("RAW_TRANSCRIPT_PATH"))
+convert_json = expand_base_path(os.getenv("CONVERT_TRANSCRIPT_JSON"))
+joined_jokes = expand_base_path(os.getenv("JOIN_JOKES"))
+joke_seg = expand_base_path(os.getenv("JOKE_SEGMENTS"))
+timestamped = expand_base_path(os.getenv("TIMESTAMPED_PATH"))  # Fixed variable name
+parameter_chunk_path = expand_base_path(os.getenv("PARAMETER_CHUNK_PATH"))
+scored_segment_path = expand_base_path(os.getenv("SCORED_SEG_PATH"))
 #from src.main import joined_jokes,parameter_chunk_path
 
 load_dotenv()
-api_key = os.getenv("API_KEY")
+
+base_path = os.getenv("BASE_PATH")
+
+
+# Function to expand BASE_PATH in environment variables
+def expand_base_path(path):
+    if path and '%BASE_PATH%' in path:
+        return path.replace('%BASE_PATH%', base_path)
+    return path
+
+
+# Fix the timestamped variable name (it was lowercase in the code but uppercase in env)
+
+
+
 
 def parse_and_parameterize(input_file, output_file):
     """
@@ -31,7 +61,7 @@ def parse_and_parameterize(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8', errors='ignore') as file:  # Changed joined_jokes to input_file
         data = json.load(file)
         print(f"Successfully loaded data form the '{input_file}'.")
-        for i in range(len(data['jokes']) - 12): # minus 8 is just for rapid testing on a realistic range
+        for i in range(len(data['jokes']) ):  # minus 8 is just for rapid testing on a realistic range
             data['jokes'][i]['humour_score'] = 0.0
             data['jokes'][i]['shock_value'] = 0.0
             #data['jokes'][i]['explicit_content_score'] = 0.0
@@ -39,8 +69,6 @@ def parse_and_parameterize(input_file, output_file):
 
         with open(output_file, 'w') as file:  # Changed parameter_chunk_path to output_file
             json.dump(data, file, indent=2)
-
-
 
 
 SYSTEM_PROMPT = """ You are a joke analysis expert. 
@@ -108,20 +136,19 @@ DO NOT ADD TEXT BEFORE OR AFTER JSON
 
 """
 
-def score_chunks(parameterized_json, api_key):
 
+
+def score_chunks(parameterized_json, api_key):
     #setting client
     client = genai.Client(api_key=api_key)
 
     # Load Transcript
-    with open(parameterized_json, 'r', encoding='utf-8', errors='ignore') as f:
-        parameterized_data = json.load(f)
 
     #fetch prompt
     prompt = f"""
     {SYSTEM_PROMPT}
     JSON TO ANALYSE:
-    {json.dumps(parameterized_data, indent=2)}
+    {json.dumps(parameterized_json, indent=2)}
     
     RETURN only the JSON response in the SPECIFIED FORMAT
 """
@@ -135,14 +162,16 @@ def score_chunks(parameterized_json, api_key):
     response = client.models.generate_content(
         model="gemini-1.5-flash",
         contents=prompt,
-        config= generation_config
+        config=generation_config
     )
     print(response.text)
     scored_segments = json.loads(response.text)
-
-
     return scored_segments
 
 
 if __name__ == "__main__":
-    parse_and_parameterize(os.getenv("JOIN_JOKES"), os.getenv("PARAMETER_CHUNK_PATH"))
+    #scored_segs = parse_and_parameterize(join, os.getenv("PARAMETER_CHUNK_PATH"))
+    print(expand_base_path(os.getenv("PARAMETER_CHUNK_PATH")))
+    scored_segs = score_chunks(expand_base_path(os.getenv("PARAMETER_CHUNK_PATH")), api_key)
+    with open(scored_segment_path, 'w') as f:
+        json.dump(scored_segs, f, indent=2, ensure_ascii=False)
