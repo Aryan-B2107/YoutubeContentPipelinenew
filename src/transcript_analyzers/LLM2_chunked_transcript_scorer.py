@@ -173,5 +173,6 @@ if __name__ == "__main__":
     #scored_segs = parse_and_parameterize(join, os.getenv("PARAMETER_CHUNK_PATH"))
     print(expand_base_path(os.getenv("PARAMETER_CHUNK_PATH")))
     scored_segs = score_chunks(expand_base_path(os.getenv("PARAMETER_CHUNK_PATH")), api_key)
+    print(scored_segs)
     with open(scored_segment_path, 'w') as f:
         json.dump(scored_segs, f, indent=2, ensure_ascii=False)
